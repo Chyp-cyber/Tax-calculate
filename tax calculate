@@ -1,0 +1,49 @@
+import ipywidgets as widgets
+from IPython.display import display, clear_output
+
+def calculate_tax(income):
+    if income <= 20000:
+        return 0
+    elif income <= 100000:
+        return (income - 20000) * 0.2
+    else:
+        return (income - 100000) * 0.45 + (100000 - 20000) * 0.2
+
+def submit_form(change):
+    full_name_value = full_name.value
+    company_value = company.value
+    job_role_value = job_role.value
+    income_value = income.value
+
+    if company_value.lower() != "alltrade":
+        with output:
+            clear_output()
+            print("Error: Incorrect company name. Please enter 'AllTrade'. Try again.")
+        return
+
+    try:
+        income_value = float(income_value)
+    except ValueError:
+        with output:
+            clear_output()
+            print("Error: Please enter a valid number for income.")
+        return
+
+    tax_value = calculate_tax(income_value)
+
+    with output:
+        clear_output()
+        print(f"{full_name_value} ({job_role_value}) needs to pay a tax of {tax_value:.2f}")
+        print(f"Thanks {full_name_value} for using the application.")
+
+full_name = widgets.Text(description="Full Name:")
+company = widgets.Text(description="Company:")
+job_role = widgets.Text(description="Job Role:")
+income = widgets.Text(description="Income:")
+submit_button = widgets.Button(description="Submit")
+
+output = widgets.Output()
+
+submit_button.on_click(submit_form)
+
+display(full_name, company, job_role, income, submit_button, output)
